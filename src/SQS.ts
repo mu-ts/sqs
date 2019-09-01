@@ -2,9 +2,6 @@ import * as AWS from 'aws-sdk';
 import {
   SendMessageRequest,
   SendMessageResult,
-  ReceiveMessageRequest,
-  ReceiveMessageResult,
-  QueueAttributeMap,
   MessageBodyAttributeMap
 } from 'aws-sdk/clients/sqs';
 

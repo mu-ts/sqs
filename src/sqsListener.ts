@@ -1,22 +1,25 @@
-import { SQSEvent } from 'aws-lambda';
 import { SQSEventCondition } from './SQSEventCondition';
-import { SQSRouter } from './SQSRouter';
+import { SQSRoutes } from './SQSRoutes';
 
 /**
  *
  * @param route for this function.
  */
-export function sqsListener<Of>(type: Of, condition?: SQSEventCondition, priority?: number) {
+export function sqsListener(condition?: SQSEventCondition, priority?: number) {
   return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const targetMethod = descriptor.value;
 
-    descriptor.value = function() {
-      const event: SQSEvent = arguments[0];
+    descriptor.value = function(): Promise<void> {
 
       return targetMethod.apply(this, arguments);
     };
 
-    SQSRouter.register(descriptor.value, condition, priority);
+    SQSRoutes.register(
+        target,
+        descriptor.value,
+        descriptor,
+        condition,
+        priority);
 
     return descriptor;
   };

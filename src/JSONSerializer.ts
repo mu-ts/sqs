@@ -14,7 +14,7 @@ export class JSONSerializer implements SQSSerializer {
     }
 
     public deserializeBody(eventBody: string): SQSBody<any> {
-        let body: SQSBody<any> = <SQSBody<any>>JSON.parse(eventBody);
+        const body: SQSBody<any> = <SQSBody<any>>JSON.parse(eventBody);
         if (body.Message) {
             body.messageBody = JSON.parse(body.Message);
         }

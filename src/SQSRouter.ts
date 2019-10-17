@@ -62,7 +62,7 @@ export abstract class SQSRouter {
 
         if (!routeOptions || routeOptions.length === 0) {
           this.logger.error('Action is not implemented at this path.');
-          throw new Error('Action is no implemented');
+          throw new Error('Action is not implemented');
         }
 
         for (const route of routeOptions) {

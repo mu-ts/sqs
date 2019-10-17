@@ -5,6 +5,6 @@ import { SNSMessageAttribute } from 'aws-lambda';
  */
 export interface SQSBody<T> {
     messageBody: T;
-    MessageAttributes: SNSMessageAttribute;
+    MessageAttributes?: SNSMessageAttribute;
     [key: string]: any;
 }

@@ -1,9 +1,5 @@
 import * as AWS from 'aws-sdk';
-import {
-  SendMessageRequest,
-  SendMessageResult,
-  MessageBodyAttributeMap
-} from 'aws-sdk/clients/sqs';
+import { SendMessageRequest, SendMessageResult, MessageBodyAttributeMap } from 'aws-sdk/clients/sqs';
 
 export class MessageReceipt {
   private messageId: string;
@@ -77,10 +73,10 @@ export class SQS {
   }
 
   public static async sendMessage(
-      queueARN: string,
-      payload: string | object,
-      subject?: string,
-      tags?: Map<string, string>
+    queueARN: string,
+    payload: string | object,
+    _subject?: string,
+    tags?: Map<string, string>
   ): Promise<MessageReceipt> {
     if (!SQS.globalSQS) SQS.globalSQS = new AWS.SQS({ apiVersion: '2012-11-05' });
     const parameters: SendMessageRequest = SQS.buildParameters(SQS.globalSerializer, queueARN, payload, tags);
@@ -97,9 +93,9 @@ export class SQS {
    * @param tags to attach to the message. Optional.
    */
   public async sendMessage(
-      payload: string | object,
-      subject?: string,
-      tags?: Map<string, string>
+    payload: string | object,
+    _subject?: string,
+    tags?: Map<string, string>
   ): Promise<MessageReceipt> {
     const parameters: SendMessageRequest = SQS.buildParameters(this.serializer, this.queueARN, payload, tags);
     const response: SendMessageResult = await SQS.send(this.sqs, parameters);
@@ -133,6 +129,6 @@ export class SQS {
   }
 
   private static async send(sqs: AWS.SQS, parameters: SendMessageRequest): Promise<SendMessageResult> {
-    return await sqs.sendMessage(parameters).promise()
+    return await sqs.sendMessage(parameters).promise();
   }
 }

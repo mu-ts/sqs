@@ -75,11 +75,17 @@ export class SQS {
   public static async sendMessage(
     queueARN: string,
     payload: string | object,
-    _subject?: string,
-    tags?: Map<string, string>
+    delayInSeconds?: number,
+    tags?: { [key: string]: string }
   ): Promise<MessageReceipt> {
     if (!SQS.globalSQS) SQS.globalSQS = new AWS.SQS({ apiVersion: '2012-11-05' });
-    const parameters: SendMessageRequest = SQS.buildParameters(SQS.globalSerializer, queueARN, payload, tags);
+    const parameters: SendMessageRequest = SQS.buildParameters(
+      SQS.globalSerializer,
+      queueARN,
+      payload,
+      tags,
+      delayInSeconds
+    );
     const response: SendMessageResult = await SQS.send(SQS.globalSQS, parameters);
     const receipt: MessageReceipt = new MessageReceipt('' + response.MessageId);
     return receipt;
@@ -94,10 +100,16 @@ export class SQS {
    */
   public async sendMessage(
     payload: string | object,
-    _subject?: string,
-    tags?: Map<string, string>
+    delayInSeconds?: number,
+    tags?: { [key: string]: string }
   ): Promise<MessageReceipt> {
-    const parameters: SendMessageRequest = SQS.buildParameters(this.serializer, this.queueARN, payload, tags);
+    const parameters: SendMessageRequest = SQS.buildParameters(
+      this.serializer,
+      this.queueARN,
+      payload,
+      tags,
+      delayInSeconds
+    );
     const response: SendMessageResult = await SQS.send(this.sqs, parameters);
     const receipt: MessageReceipt = new MessageReceipt('' + response.MessageId);
     return receipt;
@@ -107,7 +119,7 @@ export class SQS {
     serializer: SQSBodySerializer,
     queueUrl: string,
     payload: string | object,
-    tags?: Map<string, string>,
+    tags?: { [key: string]: string },
     delaySeconds?: number
   ): SendMessageRequest {
     const body = typeof payload === 'string' ? payload : serializer(payload);
@@ -119,8 +131,8 @@ export class SQS {
         ? undefined
         : Object.keys(tags).reduce((current: MessageBodyAttributeMap, key: string) => {
             current[key] = {
-              DataType: Array.isArray(tags.get(key)) ? 'String.Array' : 'String',
-              StringValue: typeof tags.get(key) !== 'string' ? JSON.stringify(tags.get(key)) : tags.get(key),
+              DataType: Array.isArray(tags[key]) ? 'String.Array' : 'String',
+              StringValue: typeof tags[key] !== 'string' ? JSON.stringify(tags[key]) : tags[key],
             };
             return current;
           }, {}),

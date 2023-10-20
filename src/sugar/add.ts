@@ -36,7 +36,7 @@ export async function add(instance: any, _topic?: string): Promise<MessageReceip
     MessageGroupId: groupId,
   }
   const command: SendMessageCommand = new SendMessageCommand(input)
-  const response: SendMessageCommandOutput =await Client.instance().send(command)
+  const response: SendMessageCommandOutput = await Client.instance().send(command)
 
 
   return new MessageReceipt(response.MessageId as string)

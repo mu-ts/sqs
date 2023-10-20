@@ -1,4 +1,4 @@
-import { QueueService } from '../sugar/guts/QueueService';
+import { QueueService } from '../sugar/guts/QueueService'
 
 export const KEY: string = 'group'
 
@@ -7,8 +7,8 @@ export const KEY: string = 'group'
  */
 export function groupId(originalMethod: any, context: ClassFieldDecoratorContext): void {
   context.addInitializer(function (): void {
-    const { name } = context;
-    const metadata = this.constructor[QueueService.PREFIX];
-    if (metadata) metadata[KEY] = name;
+    const { name } = context
+    const metadata = this.constructor[QueueService.PREFIX]
+    if (metadata) metadata[KEY] = name
   })
-};
+}
